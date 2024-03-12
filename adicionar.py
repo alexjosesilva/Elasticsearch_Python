@@ -13,6 +13,10 @@ def extract_text_from_pdf(pdf_path):
             text += page.extract_text() + " "
     return text
 
+def clean_text(text):
+    # Remove quebras de linha e espaços extras
+    cleaned_text = ' '.join(text.split())
+    return cleaned_text
 
 def index_pdf_content(pdf_path, index_name='pdf_documents'):
     """
@@ -25,17 +29,22 @@ def index_pdf_content(pdf_path, index_name='pdf_documents'):
     # Extrair texto do PDF
     pdf_text = extract_text_from_pdf(pdf_path)
 
+    # Supondo que pdf_text seja o texto extraído do PDF
+    cleaned_pdf_text = clean_text(pdf_text)
+
+    print(cleaned_pdf_text)
+
     # Indexar o texto extraído no Elasticsearch
     document = {
-        "titulo": "Entendendo Algoritmos: Fundamentos e Exemplos",
-        "content": pdf_text,
+        "titulo": "Capitalismo: Benefícios e Limitações",
+        "content": cleaned_pdf_text,
         "filename": pdf_path.split('/')[-1]  # Nome do arquivo
     }
     response = es.index(index=index_name, body=document)
     print("Documento indexado com sucesso:", response['_id'])
 
 # Caminho para o arquivo PDF que você deseja indexar
-pdf_path = "pdf/algoritmo.pdf"
+pdf_path = "pdf/arquivos/arquivo3.pdf"
 
 # Indexar o PDF no Elasticsearch
 index_pdf_content(pdf_path)
